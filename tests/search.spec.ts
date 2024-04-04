@@ -1,20 +1,23 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Locator } from '@playwright/test';
+
+let searchBox: Locator;
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
 });
 
-test('Realizar una busqueda que no tenga resultados', async ({ page }) => {
-  await page.getByRole('button').click();
-
-  await page.getByPlaceholder('Search docs').click();
-
+test.only('Realizar una busqueda que no tenga resultados', async ({ page }) => {
+  await page.getByRole('button', { name: 'Search' }).click();
+  searchBox = page.getByPlaceholder('Search docs');
+  await searchBox.click();
   await page.getByPlaceholder('Search docs').fill('hascontent');
 
-  expect(page.locator('.DocSearch-NoResults p')).toBeVisible();
+  const RESULTS_MESSAGE = page.locator(
+    '.DocSearch-NoResults p',
+  );
 
-  expect(page.locator('.DocSearch-NoResults p')).toHaveText('No results for hascontent');
-
+  await expect(RESULTS_MESSAGE).toBeVisible();
+  await expect(RESULTS_MESSAGE).toHaveText('No results for "hascontent"');
 })
 
 test('Limpiar el input de busqueda', async ({ page }) => {
