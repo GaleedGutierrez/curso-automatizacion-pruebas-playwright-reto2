@@ -30,9 +30,11 @@ test('Limpiar el input de búsqueda', async ({ page }) => {
 test('Realizar una búsqueda que genere al menos tenga un resultado', async ({ page }) => {
   await page.getByPlaceholder('Search docs').fill('havetext');
   expect(searchBox).toHaveValue('havetext');
-
   // Verity there are sections in the results
-  await page.locator('.DocSearch-Dropdown-Container section').nth(1).waitFor();
+  await page
+    .locator('.DocSearch-Dropdown-Container section')
+    .nth(1)
+    .waitFor();
 
   const numberOfResults = await page.locator('.DocSearch-Dropdown-Container section').count();
 
