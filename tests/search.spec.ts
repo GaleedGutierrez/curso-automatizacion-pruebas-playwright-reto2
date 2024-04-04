@@ -20,7 +20,7 @@ test('Realizar una búsqueda que no tenga resultados', async ({ page }) => {
   await expect(RESULTS_MESSAGE).toHaveText('No results for "hascontent"');
 })
 
-test.only('Limpiar el input de búsqueda', async ({ page }) => {
+test('Limpiar el input de búsqueda', async ({ page }) => {
   await page.getByRole('button', { name: 'Search' }).click();
   searchBox = page.getByPlaceholder('Search docs');
   await searchBox.click();
@@ -30,20 +30,17 @@ test.only('Limpiar el input de búsqueda', async ({ page }) => {
   await expect(searchBox).toHaveAttribute('value', '');
 });
 
-test('Realizar una búsqueda que genere al menos tenga un resultado', async ({ page }) => {
-  await page.getByRole('button', { name: 'Search ' }).click();
-
-  const searchBox = page.getByPlaceholder('Search docs');
-
+test.only('Realizar una búsqueda que genere al menos tenga un resultado', async ({ page }) => {
+  await page.getByRole('button', { name: 'Search' }).click();
+  searchBox = page.getByPlaceholder('Search docs');
   await searchBox.click();
-
   await page.getByPlaceholder('Search docs').fill('havetext');
-
-  expect(searchBox).toHaveText('havetext');
+  expect(searchBox).toHaveValue('havetext');
 
   // Verity there are sections in the results
   await page.locator('.DocSearch-Dropdown-Container section').nth(1).waitFor();
-  const numberOfResults = await page.locator('.DocSearch-Dropdown-Container section').count();
-  await expect(numberOfResults).toBeGreaterThan(0);
 
+  const numberOfResults = await page.locator('.DocSearch-Dropdown-Container section').count();
+
+  expect(numberOfResults).toBeGreaterThan(0);
 });
